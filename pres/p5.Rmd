@@ -1,0 +1,35 @@
+---
+title: Studying social norms with behavioral experiments (with oTree)
+subtitle: Day 5 - Make them work (RETs)
+author: 
+   - Philipp Chapkovski$^1$
+institute: 
+   - $^1$HSE-Moscow
+date: "July 17, 2021"
+output:
+  beamer_presentation: 
+    includes:
+      in_header: columns.tex
+    theme: CambridgeUS
+    colortheme: dolphin
+    fonttheme: structurebold
+    highlight: zenburn
+    incremental: no
+    fig_caption: yes
+fontsize: 10pt
+bibliography: spb_ss.bib
+header-includes:
+- \usepackage {hyperref}
+- \usepackage{MnSymbol,wasysym}
+- \hypersetup {colorlinks = true, linkcolor = blue, urlcolor = blue}
+- \newcommand{\bcenter}{\begin{center}}
+- \newcommand{\ecenter}{\end{center}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache=TRUE, fig.align = 'center')
+```
+
+## Some terminology
+ 
+## References {.allowframebreaks}
