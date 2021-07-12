@@ -30,6 +30,14 @@ header-includes:
 knitr::opts_chunk$set(echo = FALSE, cache=TRUE, fig.align = 'center')
 ```
 
-## Some terminology
+## Cheating game
+
+
+```{ eval=FALSE}
+a = 1
+for i in j:
+    print(i)
+```
+[@fischbacher2013lies]
  
 ## References {.allowframebreaks}

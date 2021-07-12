@@ -2,6 +2,12 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
+        name='dice',
+        display_name='Dice game (Fischbacher and Föllmi-Heusi 2013)',
+        app_sequence=['dice'],
+        num_demo_participants=1,
+    ),
+    dict(
         name='dg',
         display_name='Dictator game',
         app_sequence=['dg'],
