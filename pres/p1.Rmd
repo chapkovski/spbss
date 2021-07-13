@@ -50,6 +50,8 @@ knitr::opts_chunk$set(echo = FALSE, cache=TRUE, fig.align = 'center')
 
 - Demo app: <https://spbss.herokuapp.com/>
 
+- Presentation (these slides:) <https://github.com/chapkovski/spbss/tree/main/pres/ready>
+
 ## Cheating game
 
 -   Profit depends on the number reported on a die
@@ -133,8 +135,8 @@ SESSION_CONFIGS = [
     ),
     ]
 ```
+If you introduce treatments you can refer to the session.config later like that: ```player.session.config['beliefs']```
 
-If you introduce treatments you can
 
 ## Running the app:
 
@@ -313,7 +315,7 @@ SESSION_CONFIGS = [
 
 Where to store the data? Subsession? Group? Player?
 
-** Rule of thumb:** _put it to the level of the highest variability_
+**Rule of thumb:** _put it to the level of the highest variability_
 
 Example: Dictator game:
 
@@ -405,7 +407,207 @@ class Constants(BaseConstants):
 ```
 
 
-## Dictator game
+## Dictator game - planning
+
+- Two players game
+- Asymmetric: two different roles (*Dictator* and *Recipient* )
+- Payoffs: 
+  - Dictator decides how much to send out of endowment. The rest is his/her payoff
+
+## Dictator game - pages
+
+  - Intro
+  - Decision (for *Dictator*)
+  - Belief about Dictator's decision (for *Recipient&*)
+  - Waiting for Dictator's decision
+  - Results
+  
+## Dictator game - pages
+
+  ```python
+  page_sequence = [
+    Intro,
+    Decision,
+    Belief,
+    ResultsWaitPage,
+    Results
+]
+  ```
+
+
+## Dictator game - pages
+
+  ```python
+ class Decision(Page):
+    form_model = 'group'
+    form_fields = ['send']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.role == Constants.dictator_role
+
+
+class Belief(Page):
+    form_model = 'group'
+    form_fields = ['belief']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.role == Constants.recipient_role
+
+
+class ResultsWaitPage(WaitPage):
+    after_all_players_arrive = set_payoffs
+  ```
+
+
+
+## Dictator game - role assignment and other constants:
+
+```python
+class Constants(BaseConstants):
+    name_in_url = 'dictator'
+    players_per_group = 2
+    num_rounds = 1
+    # Initial amount allocated to the dictator
+    endowment = cu(100)
+    dictator_role = 'Participant A'
+    recipient_role = 'Participant B'
+```
+
+
+
+## Dictator game - models:
+
+```python
+class Group(BaseGroup):
+    send = models.CurrencyField(
+        doc="""Amount dictator sends to a Recipient""",
+        min=0,
+        max=Constants.endowment,
+        label=f"I will send to {Constants.recipient_role}",
+    )
+    kept = models.CurrencyField()
+    belief = models.CurrencyField()
+
+```
+
+## Dictator game - payoff calculations:
+
+```python
+def set_payoffs(group: Group):
+    dictator = group.get_player_by_role(Constants.dictator_role)
+    recipient = group.get_player_by_role(Constants.recipient_role)
+    group.kept = Constants.endowment - group.send
+    dictator.payoff = group.kept
+    recipient.payoff = group.send
+
+```
+
+## HTML templates and fields from database:
+
+```python
+ class Decision(Page):
+    form_model = 'group'
+    form_fields = ['send']
+
+```
+and in the html template:
+```html
+{{ formfields }}
+```
+OR:
+
+```html
+ {{ formfield player.send }}
+```
+
+## HTML templates:
+
+```html
+{{ block title }}
+  Decision
+{{ endblock }}
+{{ block content }}
+  <div class="alert alert-info">You are {{player.role}}</div>
+  {{ formfields }}
+  {{ next_button }}
+  {{ include 'dg/includes/instructions.html' }}
+{{ endblock }}
+```
+
+
+
+
+## HTML templates:
+
+Instead of rendering all the fields we can render a single one:
+
+
+```html
+{{ block content }}
+  <div class="alert alert-info">You are {{player.role}}</div>
+  <h5>Try to guess how much <b>{{Constants.dictator_role}}</b> will send you? </h5>
+  {{ formfield player.belief label=''}}
+  {{ next_button }}
+  {{ include 'dg/includes/instructions.html' }}
+{{ endblock }}
+```
+
+## HTML templates:
+
+We can render any variable from the database or from `Constants`:
+
+```html
+
+Your endowment was {{Constants.endowment}}.
+
+{{Constants.dictator_role}} has sent you {{group.send}}.
+
+```
+
+
+
+## HTML templates:
+
+You can use loops to render lists and arrays:
+```python
+class Constants(BaseConstants):
+    payoffs = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 0}
+```
+
+```html
+<table class="table">
+  <tr>
+      {{ for i in Constants.payoffs.keys }}
+      <td>{{i}}</td>
+      {{endfor}}
+  </tr>
+  <tr>
+       {{  for j in Constants.payoffs.values }}
+      <td>{{j}}</td>
+      {{ endfor }}
+  </tr>
+</table>
+```
+
+## HTML templates:
+
+You can use `if` conditions in  templates:
+
+```html
+<div class="my-3">
+    {{ if player.role == Constants.dictator_role }}
+    You decided to keep <strong>{{ group.kept }}</strong> for yourself.
+    {{ else }}
+    {{Constants.dictator_role}} decided to keep <strong>{{ group.kept }}</strong>, so
+    you got <strong>{{ group.send }}</strong>.
+    {{ endif }}
+</div>
+```
+
+
+
 
 
 ## References {.allowframebreaks}
