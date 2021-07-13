@@ -1,0 +1,17 @@
+\frametitle{Anatomy of oTree - Constants}
+\protect\hypertarget{anatomy-of-otree---constants-1}{}
+Some built-in values of Constants include:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{ Constants(BaseConstants):}
+\NormalTok{    name\_in\_url }\OperatorTok{=} \StringTok{\textquotesingle{}dictator\textquotesingle{}}
+\NormalTok{    players\_per\_group }\OperatorTok{=} \DecValTok{2}
+\NormalTok{    num\_rounds }\OperatorTok{=} \DecValTok{1}
+\NormalTok{    instructions\_template }\OperatorTok{=} \StringTok{\textquotesingle{}dictator/instructions.html\textquotesingle{}}
+    \CommentTok{\# Initial amount allocated to the dictator}
+\NormalTok{    endowment }\OperatorTok{=}\NormalTok{ cu(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    dictator\_role }\OperatorTok{=} \StringTok{\textquotesingle{}Participant A\textquotesingle{}}
+\NormalTok{    recipient\_role }\OperatorTok{=} \StringTok{\textquotesingle{}Participant B\textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
