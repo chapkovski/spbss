@@ -1,6 +1,6 @@
 ---
 title: Studying social norms with behavioral experiments (with oTree)
-subtitle: Day 1 - Cheating game and DG. 
+
 knit: (function(inputFile, encoding) { 
       out_dir <- 'ready';
       rmarkdown::render(inputFile,
@@ -258,6 +258,9 @@ Page has several built-in methods:
 - is_displayed
 - vars_for_template
 - before_next_page
+- form_model 
+- form_fields, get_form_fields
+- timeout_seconds, get_timeout_seconds
 
 `WaitPage` has most of the methods above (with an exception of `before_next_page`)
 and a few others, the most important one is:
